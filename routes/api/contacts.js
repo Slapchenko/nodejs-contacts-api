@@ -1,7 +1,6 @@
 const express = require("express");
-
-const { validation } = require("../../middlewares");
-const { errorHandling } = require("../../helpers");
+const { validationMiddleware, authMiddleware } = require("../../middlewares");
+const { errorHandler } = require("../../helpers");
 const { contactSchema, contactStatusSchema } = require("../../schemas");
 const {
   getContactsListController,
@@ -14,28 +13,35 @@ const {
 
 const router = express.Router();
 
-router.get("/", errorHandling(getContactsListController));
+router.get("/", authMiddleware, errorHandler(getContactsListController));
 
-router.get("/:id", errorHandling(getContactByIdController));
+router.get("/:id", authMiddleware, errorHandler(getContactByIdController));
 
 router.post(
   "/",
-  validation(contactSchema),
-  errorHandling(createContactController)
+  authMiddleware,
+  validationMiddleware(contactSchema),
+  errorHandler(createContactController)
 );
 
-router.delete("/:id", errorHandling(removeContactByIdController));
+router.delete(
+  "/:id",
+  authMiddleware,
+  errorHandler(removeContactByIdController)
+);
 
 router.put(
   "/:id",
-  validation(contactSchema),
-  errorHandling(updateContactByIdController)
+  authMiddleware,
+  validationMiddleware(contactSchema),
+  errorHandler(updateContactByIdController)
 );
 
 router.patch(
   "/:id/favorite",
-  validation(contactStatusSchema),
-  errorHandling(updateStatusContactController)
+  authMiddleware,
+  validationMiddleware(contactStatusSchema),
+  errorHandler(updateStatusContactController)
 );
 
 module.exports = router;
