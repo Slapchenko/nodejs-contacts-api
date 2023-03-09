@@ -52,7 +52,6 @@ router.patch(
   "/avatars",
   authMiddleware,
   uploadMiddleware.single("avatar"),
-  validationMiddleware(userSubscriptionSchema),
   errorHandler(updateUserAvatarController)
 );
 
