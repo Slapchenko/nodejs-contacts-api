@@ -3,31 +3,47 @@ const { User } = require("../../models");
 const gravatar = require("gravatar");
 const { v4: uuidv4 } = require("uuid");
 const { sendEmail } = require("../../helpers");
+const { PORT } = process.env;
 
-const signupUserController = async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
+const signupUserController = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
 
-  if (user) throw new Conflict("Email in use");
+    const user = await User.findOne({ email });
 
-  const verificationToken = uuidv4();
+    if (user) {
+      throw new Conflict("Email is already in use");
+    }
 
-  const avatarURL = gravatar.url(email);
+    const verificationToken = uuidv4();
 
-  const newUser = new User({ email, avatarURL, verificationToken });
+    const avatarURL = gravatar.url(email);
 
-  newUser.setPassword(password);
+    const newUser = new User({ email, avatarURL, verificationToken });
 
-  await newUser.save();
+    newUser.setPassword(password);
 
-  res.status(201).json({
-    user: {
-      email,
-      subscription: "starter",
-      avatarURL,
-      verificationToken,
-    },
-  });
+    await newUser.save();
+
+    const mail = {
+      to: email,
+      subject: "Email Confirmation",
+      html: `<a target="_blank" href="http://localhost:${PORT}/api/users/verify/${verificationToken}">Confirm Email</a>`,
+    };
+
+    await sendEmail(mail);
+
+    res.status(201).json({
+      user: {
+        email,
+        subscription: "starter",
+        avatarURL,
+        verificationToken,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = signupUserController;
