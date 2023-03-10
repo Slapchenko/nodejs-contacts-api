@@ -5,6 +5,7 @@ const getCurrentUserController = require("./getCurrentUserController");
 const updateUserSubscriptionController = require("./updateUserSubscriptionController");
 const updateUserAvatarController = require("./updateUserAvatarController");
 const emailConfirmationController = require("./emailConfirmationController");
+const resendEmailConfirmationController = require("./resendEmailConfirmationController");
 
 module.exports = {
   signupUserController,
@@ -13,5 +14,6 @@ module.exports = {
   getCurrentUserController,
   updateUserSubscriptionController,
   updateUserAvatarController,
-  emailConfirmationController
+  emailConfirmationController,
+  resendEmailConfirmationController
 };
