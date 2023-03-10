@@ -21,7 +21,7 @@ const {
   getCurrentUserController,
   updateUserSubscriptionController,
   updateUserAvatarController,
-  verifyEmailController
+  emailConfirmationController
 } = require("../../controllers");
 
 const router = express.Router();
@@ -56,6 +56,12 @@ router.patch(
   errorHandler(updateUserAvatarController)
 );
 
-router.get("/verify/:verificationToken", errorHandler(verifyEmailController));
+router.get("/verify/:verificationToken", errorHandler(emailConfirmationController));
+
+// router.post(
+//   '/verify',
+//   validationMiddleware(resendEmailSchema),
+//   errorWrapper(resendEmailConfirmationController)
+// );
 
 module.exports = router;

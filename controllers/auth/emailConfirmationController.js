@@ -1,7 +1,7 @@
 const { NotFound } = require("http-errors");
 const { User } = require("../../models");
 
-const verifyEmailController = async (req, res) => {
+const emailConfirmationController = async (req, res) => {
   const { verificationToken } = req.params;
 
   const user = await User.findOne({ verificationToken });
@@ -20,4 +20,4 @@ const verifyEmailController = async (req, res) => {
   });
 };
 
-module.exports = verifyEmailController;
+module.exports = emailConfirmationController;
