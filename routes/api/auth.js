@@ -21,6 +21,7 @@ const {
   getCurrentUserController,
   updateUserSubscriptionController,
   updateUserAvatarController,
+  verifyEmailController
 } = require("../../controllers");
 
 const router = express.Router();
@@ -54,5 +55,7 @@ router.patch(
   uploadMiddleware.single("avatar"),
   errorHandler(updateUserAvatarController)
 );
+
+router.get("/verify/:verificationToken", errorHandler(verifyEmailController));
 
 module.exports = router;
